@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Companies Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f0;
+    --muted: #888;
+    --faint: #555;
+    --accent: #7c6fff;
+    --accent2: #4fd1a8;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Header */
+  header {
+    padding: 3rem 2rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .logo-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.7); }
+  }
+  .site-label {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  h1 span { color: var(--accent); }
+  .header-desc {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    margin-top: 8px;
+  }
+  .stat-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .stat-chip {
+    font-size: 12px;
+    font-family: var(--mono);
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    color: var(--muted);
+  }
+  .stat-chip b { color: var(--accent2); }
+
+  /* Controls */
+  .controls-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-wrap {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--faint);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  input[type=text] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    padding: 9px 12px 9px 36px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  input[type=text]:focus { border-color: var(--accent); }
+  input[type=text]::placeholder { color: var(--faint); }
+  select {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: var(--font);
+    font-size: 13px;
+    padding: 9px 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  /* Tags */
+  .tags-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+  .tag {
+    font-size: 12px;
+    font-family: var(--mono);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+    background: transparent;
+    user-select: none;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag.active { background: rgba(124,111,255,0.15); border-color: var(--accent); color: var(--accent); }
+
+  /* Count */
+  .count-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--faint);
+  }
+
+  /* Grid */
+  .grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s, background .15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(124,111,255,0.04) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); background: var(--surface2); }
+  .card:hover::before { opacity: 1; }
+  .card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .logo {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+  .card-name { font-size: 15px; font-weight: 600; }
+  .card-origin { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .card-year { font-size: 11px; color: var(--faint); font-family: var(--mono); }
+  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 12px; }
+  .card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--faint);
+  }
+  .badge.focus-badge { border-color: rgba(79,209,168,0.3); color: var(--accent2); }
+
+  /* No results */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* Modal */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+  .modal::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .modal-header { display: flex; align-items: center; gap: 14px; margin-bottom: 2rem; }
+  .modal-logo {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 600;
+    flex-shrink: 0;
+    letter-spacing: -0.02em;
+  }
+  .modal-name { font-size: 22px; font-weight: 600; }
+  .modal-meta { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .close-btn {
+    margin-left: auto;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--font);
+    transition: color .15s, border-color .15s;
+    flex-shrink: 0;
+  }
+  .close-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  .section { margin-bottom: 1.75rem; }
+  .section-title {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--faint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-row { display: flex; flex-direction: column; gap: 8px; }
+  .info-item { display: flex; gap: 12px; font-size: 13px; }
+  .info-label { color: var(--muted); min-width: 110px; flex-shrink: 0; }
+  .info-val { color: var(--text); font-weight: 500; }
+
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 8px;
+  }
+  .person {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+  .person-name { font-size: 13px; font-weight: 500; }
+  .person-role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    font-size: 12px;
+    padding: 5px 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+  }
+
+  .dept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .dept {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+  }
+  .dept-name { font-size: 13px; font-weight: 500; }
+  .dept-head { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--faint);
+    border-top: 1px solid var(--border);
+  }
+
+  @media(max-width:600px){
+    header, .controls-bar, .tags-bar, .count-bar { padding-left: 1rem; padding-right: 1rem; }
+    .grid { padding-left: 1rem; padding-right: 1rem; }
+    .modal { padding: 1.25rem; }
+    h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="logo-mark">
+        <div class="logo-dot"></div>
+        <span class="site-label">AI Directory</span>
+      </div>
+      <h1>The <span>AI Companies</span><br>Directory</h1>
+      <p class="header-desc">Founders, leadership, investors & org structure for the world's most prominent AI labs and companies.</p>
+    </div>
+  </div>
+  <div class="stat-chips">
+    <span class="stat-chip"><b>12</b> companies</span>
+    <span class="stat-chip"><b>50+</b> people profiled</span>
+    <span class="stat-chip"><b>USA · UK · France · Canada</b></span>
+    <span class="stat-chip">Last updated <b>2025</b></span>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="search" placeholder="Search by company, person, investor..." oninput="render()">
+  </div>
+  <select id="sort" onchange="render()">
+    <option value="name">Sort: A–Z</option>
+    <option value="year">Sort: Year founded</option>
+    <option value="focus">Sort: Focus area</option>
+  </select>
+</div>
+
+<div class="tags-bar" id="tags"></div>
+<div class="count-bar" id="count"></div>
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<footer>Built with love · AI Companies Directory · Open source &amp; free to use</footer>
+
+<script>
+const companies = [
+  {
+    id:"openai",abbr:"OA",bg:"#1a1a2e",fg:"#9b8fff",
+    name:"OpenAI",origin:"San Francisco, USA",year:2015,
+    focus:"General AI",tags:["LLM","Research","Consumer"],
+    desc:"Creator of GPT-4, ChatGPT, and DALL·E. Pioneer of large language models deployed at massive scale.",
+    ceo:{name:"Sam Altman"},cto:{name:"Jakub Pachocki (Chief Scientist)"},
+    people:[
+      {name:"Sam Altman",role:"CEO",i:"SA",bg:"#1a1a2e",fg:"#9b8fff"},
+      {name:"Greg Brockman",role:"Co-founder & President",i:"GB",bg:"#1e2a1e",fg:"#4fd1a8"},
+      {name:"Ilya Sutskever",role:"Co-founder (departed)",i:"IS",bg:"#2a2a2a",fg:"#888"},
+      {name:"Jakub Pachocki",role:"Chief Scientist",i:"JP",bg:"#1e2a1e",fg:"#4fd1a8"},
+      {name:"Brad Lightcap",role:"COO",i:"BL",bg:"#2a1e1e",fg:"#ff9b7c"},
+      {name:"Sarah Friar",role:"CFO",i:"SF",bg:"#2a251e",fg:"#ffc97c"},
+    ],
+    founders:["Sam Altman","Greg Brockman","Ilya Sutskever","John Schulman","Wojciech Zaremba","Elon Musk (departed)"],
+    investors:["Microsoft","Khosla Ventures","Reid Hoffman","Tiger Global","Sequoia Capital","Fidelity","Thrive Capital","SoftBank"],
+    valuation:"$300B+",funding:"$17.9B+",
+    products:["ChatGPT","GPT-4o","DALL·E 3","Sora","Whisper","Codex"],
+    departments:[
+      {name:"Research",head:"Jakub Pachocki"},{name:"Safety",head:"Lilian Weng"},
+      {name:"Product",head:"Kevin Weil"},{name:"Policy",head:"Anna Makanju"},
+      {name:"Infrastructure",head:"—"},{name:"API Platform",head:"—"},
+    ]
+  },
+  {
+    id:"anthropic",abbr:"An",bg:"#1e1a14",fg:"#ffb347",
+    name:"Anthropic",origin:"San Francisco, USA",year:2021,
+    focus:"AI Safety",tags:["LLM","Safety","Research"],
+    desc:"Safety-focused AI lab behind Claude. Pioneering Constitutional AI and interpretability research.",
+    ceo:{name:"Dario Amodei"},cto:{name:"Tom Brown"},
+    people:[
+      {name:"Dario Amodei",role:"CEO",i:"DA",bg:"#1e1a14",fg:"#ffb347"},
+      {name:"Daniela Amodei",role:"President",i:"DnA",bg:"#1a1a2e",fg:"#9b8fff"},
+      {name:"Tom Brown",role:"CTO",i:"TB",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Chris Olah",role:"Interpretability Research",i:"CO",bg:"#1e2a1e",fg:"#4fd1a8"},
+      {name:"Jared Kaplan",role:"Chief Science Officer",i:"JK",bg:"#1e1e1a",fg:"#ffc97c"},
+      {name:"Mike Krieger",role:"CPO",i:"MK",bg:"#1e1a1a",fg:"#ff9b7c"},
+    ],
+    founders:["Dario Amodei","Daniela Amodei","Tom Brown","Chris Olah","Sam McCandlish","Jack Clark","Jared Kaplan"],
+    investors:["Amazon","Google","Spark Capital","Salesforce Ventures","SK Telecom","Menlo Ventures","Lightspeed"],
+    valuation:"$61B+",funding:"$7.3B+",
+    products:["Claude 3.5 Sonnet","Claude Opus","Claude Haiku","Constitutional AI"],
+    departments:[
+      {name:"Research",head:"Jared Kaplan"},{name:"Interpretability",head:"Chris Olah"},
+      {name:"Product",head:"Mike Krieger"},{name:"Policy",head:"Jack Clark"},
+      {name:"Infrastructure",head:"—"},{name:"Safety",head:"—"},
+    ]
+  },
+  {
+    id:"deepmind",abbr:"DM",bg:"#141e1a",fg:"#4fd1a8",
+    name:"Google DeepMind",origin:"London, UK",year:2010,
+    focus:"AGI Research",tags:["Research","LLM","Science"],
+    desc:"Google's flagship AI research lab. Created AlphaFold, Gemini, and AlphaGo. Merger of DeepMind and Google Brain.",
+    ceo:{name:"Demis Hassabis"},cto:{name:"Koray Kavukcuoglu"},
+    people:[
+      {name:"Demis Hassabis",role:"CEO & Co-founder",i:"DH",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Shane Legg",role:"Co-founder & Chief AGI Scientist",i:"SL",bg:"#1a1a2e",fg:"#9b8fff"},
+      {name:"Koray Kavukcuoglu",role:"CTO",i:"KK",bg:"#1e1a14",fg:"#ffb347"},
+      {name:"Jeff Dean",role:"Chief Scientist, Google",i:"JD",bg:"#1e2a1e",fg:"#4fd1a8"},
+      {name:"Oriol Vinyals",role:"VP Research",i:"OV",bg:"#1e1e1a",fg:"#ffc97c"},
+      {name:"Pushmeet Kohli",role:"VP Research",i:"PK",bg:"#1e1a1a",fg:"#ff9b7c"},
+    ],
+    founders:["Demis Hassabis","Shane Legg","Mustafa Suleyman (departed)"],
+    investors:["Google (Alphabet) — fully owned"],
+    valuation:"Part of Alphabet ($2T+)",funding:"Acquired ~$500M (2014)",
+    products:["Gemini 1.5 Pro","AlphaFold 3","Gemini Advanced","AlphaStar","Genie"],
+    departments:[
+      {name:"Gemini",head:"Eli Collins"},{name:"AlphaFold",head:"John Jumper"},
+      {name:"Robotics",head:"—"},{name:"Safety",head:"Rohin Shah"},
+      {name:"RL Research",head:"Oriol Vinyals"},{name:"Neuroscience",head:"—"},
+    ]
+  },
+  {
+    id:"meta",abbr:"MA",bg:"#141828",fg:"#6699ff",
+    name:"Meta AI",origin:"Menlo Park, USA",year:2013,
+    focus:"Open-source AI",tags:["LLM","Open-source","Research"],
+    desc:"Meta's AI research division behind LLaMA. Advocates for open model weights and AR/VR AI systems.",
+    ceo:{name:"Mark Zuckerberg"},cto:{name:"Andrew Bosworth"},
+    people:[
+      {name:"Mark Zuckerberg",role:"CEO, Meta",i:"MZ",bg:"#141828",fg:"#6699ff"},
+      {name:"Yann LeCun",role:"Chief AI Scientist",i:"YL",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Andrew Bosworth",role:"CTO, Meta",i:"AB",bg:"#1a1a2e",fg:"#9b8fff"},
+      {name:"Ahmad Al-Dahle",role:"VP of GenAI",i:"AA",bg:"#1e1e1a",fg:"#ffc97c"},
+      {name:"Joelle Pineau",role:"VP AI Research",i:"JP",bg:"#1e2a1e",fg:"#4fd1a8"},
+    ],
+    founders:["Mark Zuckerberg","Dustin Moskovitz","Chris Hughes","Eduardo Saverin","Andrew McCollum"],
+    investors:["Public (META on NASDAQ)"],
+    valuation:"$1.4T+ (Meta)",funding:"Public company",
+    products:["Llama 3","Meta AI Assistant","SAM 2","ImageBind","AudioCraft"],
+    departments:[
+      {name:"FAIR",head:"Joelle Pineau"},{name:"GenAI",head:"Ahmad Al-Dahle"},
+      {name:"AI Infrastructure",head:"—"},{name:"AR/VR AI",head:"—"},
+      {name:"Responsible AI",head:"—"},
+    ]
+  },
+  {
+    id:"xai",abbr:"xA",bg:"#1a1a1a",fg:"#e0e0e0",
+    name:"xAI",origin:"Palo Alto, USA",year:2023,
+    focus:"Truth-seeking AI",tags:["LLM","Research"],
+    desc:"Elon Musk's AI company building Grok, integrated with X (Twitter). Focused on universe-understanding AI.",
+    ceo:{name:"Elon Musk"},cto:{name:"Greg Yang"},
+    people:[
+      {name:"Elon Musk",role:"CEO & Founder",i:"EM",bg:"#222",fg:"#ddd"},
+      {name:"Greg Yang",role:"Co-founder",i:"GY",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Igor Babuschkin",role:"Co-founder",i:"IB",bg:"#1a1a2e",fg:"#9b8fff"},
+      {name:"Tony Wu",role:"Co-founder",i:"TW",bg:"#1e1e1a",fg:"#ffc97c"},
+      {name:"Zack Witten",role:"Co-founder",i:"ZW",bg:"#1e1a14",fg:"#ffb347"},
+    ],
+    founders:["Elon Musk","Greg Yang","Igor Babuschkin","Tony Wu","Kyle Kosic","Zack Witten","Christian Szegedy"],
+    investors:["Elon Musk","Valor Equity Partners","Vy Capital","Andreessen Horowitz","Sequoia Capital","SpaceX"],
+    valuation:"$50B+",funding:"$6B+",
+    products:["Grok 2","Grok Vision","Aurora (weather model)"],
+    departments:[
+      {name:"Research",head:"Greg Yang"},{name:"Product",head:"—"},
+      {name:"Infrastructure",head:"—"},{name:"X Integration",head:"—"},
+    ]
+  },
+  {
+    id:"mistral",abbr:"Mi",bg:"#1e1a0e",fg:"#f5c842",
+    name:"Mistral AI",origin:"Paris, France",year:2023,
+    focus:"Efficient LLMs",tags:["LLM","Open-source","European"],
+    desc:"European AI leader known for high-performance, efficient open-weight models. Champion of AI sovereignty in Europe.",
+    ceo:{name:"Arthur Mensch"},cto:{name:"Guillaume Lample"},
+    people:[
+      {name:"Arthur Mensch",role:"CEO",i:"AM",bg:"#1e1a0e",fg:"#f5c842"},
+      {name:"Guillaume Lample",role:"Co-founder & Chief Scientist",i:"GL",bg:"#141828",fg:"#6699ff"},
+      {name:"Timothée Lacroix",role:"Co-founder",i:"TL",bg:"#141e1a",fg:"#4fd1a8"},
+    ],
+    founders:["Arthur Mensch","Guillaume Lample","Timothée Lacroix"],
+    investors:["Andreessen Horowitz","Lightspeed","BNP Paribas","Salesforce","General Catalyst","Xavier Niel"],
+    valuation:"$6B+",funding:"$1.1B+",
+    products:["Mistral Large","Mixtral 8x22B","Mistral 7B","Le Chat","Codestral"],
+    departments:[
+      {name:"Research",head:"Guillaume Lample"},{name:"Product",head:"Arthur Mensch"},
+      {name:"API Platform",head:"—"},{name:"Enterprise",head:"—"},
+    ]
+  },
+  {
+    id:"cohere",abbr:"Co",bg:"#1a1428",fg:"#c084fc",
+    name:"Cohere",origin:"Toronto, Canada",year:2019,
+    focus:"Enterprise AI",tags:["LLM","Enterprise","API"],
+    desc:"Enterprise-focused NLP platform offering embeddings, generation, and RAG solutions for B2B deployments.",
+    ceo:{name:"Aidan Gomez"},cto:{name:"Ivan Zhang"},
+    people:[
+      {name:"Aidan Gomez",role:"CEO & Co-founder",i:"AG",bg:"#1a1428",fg:"#c084fc"},
+      {name:"Nick Frosst",role:"Co-founder",i:"NF",bg:"#141828",fg:"#6699ff"},
+      {name:"Ivan Zhang",role:"Co-founder & CTO",i:"IZ",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Martin Kon",role:"President",i:"MK",bg:"#1e1e1a",fg:"#ffc97c"},
+    ],
+    founders:["Aidan Gomez","Nick Frosst","Ivan Zhang"],
+    investors:["Salesforce","Oracle","NVIDIA","Index Ventures","Tiger Global","Inovia Capital"],
+    valuation:"$5.5B",funding:"$970M+",
+    products:["Command R+","Embed 3","Aya","Rerank","Coral"],
+    departments:[
+      {name:"Research",head:"Aidan Gomez"},{name:"Enterprise Sales",head:"Martin Kon"},
+      {name:"Product",head:"—"},{name:"Platform",head:"Ivan Zhang"},
+    ]
+  },
+  {
+    id:"inflection",abbr:"In",bg:"#1e1428",fg:"#f472b6",
+    name:"Inflection AI",origin:"Palo Alto, USA",year:2022,
+    focus:"Personal AI",tags:["LLM","Consumer"],
+    desc:"Created Pi, a personal AI assistant. Co-founders Mustafa Suleyman and Karén Simonyan later moved to Microsoft.",
+    ceo:{name:"Sean White"},cto:{name:"Karén Simonyan (departed)"},
+    people:[
+      {name:"Mustafa Suleyman",role:"Co-founder (now at Microsoft)",i:"MS",bg:"#1e1428",fg:"#f472b6"},
+      {name:"Karén Simonyan",role:"Co-founder (now at Microsoft)",i:"KS",bg:"#141828",fg:"#6699ff"},
+      {name:"Reid Hoffman",role:"Co-founder",i:"RH",bg:"#141e1a",fg:"#4fd1a8"},
+      {name:"Sean White",role:"CEO",i:"SW",bg:"#1e1e1a",fg:"#ffc97c"},
+    ],
+    founders:["Mustafa Suleyman","Karén Simonyan","Reid Hoffman"],
+    investors:["Microsoft","Reid Hoffman","Bill Gates","Eric Schmidt","NVIDIA","Greylock"],
+    valuation:"~$4B (peak)",funding:"$1.5B",
+    products:["Pi (personal AI)","Inflection-2"],
+    departments:[
+      {name:"Research",head:"—"},{name:"Product",head:"—"},{name:"Consumer",head:"—"},
+    ]
+  },
+  {
+    id:"stability",abbr:"SA",bg:"#141e14",fg:"#86efac",
+    name:"Stability AI",origin:"London, UK",year:2019,
+    focus:"Generative Media",tags:["Image","Open-source","Media"],
+    desc:"Open-source generative AI for images, audio, video, and 3D. Known globally for Stable Diffusion.",
+    ceo:{name:"Prem Akkaraju"},cto:{name:"—"},
+    people:[
+      {name:"Emad Mostaque",role:"Founder (departed 2024)",i:"EM",bg:"#1a1a1a",fg:"#888"},
+      {name:"Prem Akkaraju",role:"CEO",i:"PA",bg:"#141828",fg:"#6699ff"},
+    ],
+    founders:["Emad Mostaque"],
+    investors:["Coatue Management","Lightspeed","Intel Capital","O'Shaughnessy Ventures"],
+    valuation:"~$1B",funding:"$101M+",
+    products:["Stable Diffusion 3","Stable Video","Stable Audio","Stable LM"],
+    departments:[
+      {name:"Image Research",head:"—"},{name:"Video",head:"—"},
+      {name:"Audio",head:"—"},{name:"3D",head:"—"},
+    ]
+  },
+  {
+    id:"midjourney",abbr:"Mj",bg:"#0e1420",fg:"#7dd3fc",
+    name:"Midjourney",origin:"San Francisco, USA",year:2021,
+    focus:"AI Art",tags:["Image","Consumer","Creative"],
+    desc:"Independent research lab creating the Midjourney image generator. Bootstrapped, profitable, and community-driven.",
+    ceo:{name:"David Holz"},cto:{name:"—"},
+    people:[
+      {name:"David Holz",role:"CEO & Founder",i:"DH",bg:"#0e1420",fg:"#7dd3fc"},
+    ],
+    founders:["David Holz"],
+    investors:["Self-funded / Bootstrapped"],
+    valuation:"~$10B (rumored)",funding:"No external funding",
+    products:["Midjourney V6","Niji","Midjourney Web"],
+    departments:[
+      {name:"Research",head:"—"},{name:"Infrastructure",head:"—"},{name:"Community",head:"—"},
+    ]
+  },
+  {
+    id:"huggingface",abbr:"HF",bg:"#1e1a0e",fg:"#fb923c",
+    name:"Hugging Face",origin:"New York, USA",year:2016,
+    focus:"ML Community",tags:["Open-source","Platform","Tools"],
+    desc:"The GitHub of AI — open-source hub for models, datasets, and demos. Home to the Transformers library.",
+    ceo:{name:"Clément Delangue"},cto:{name:"Julien Chaumond"},
+    people:[
+      {name:"Clément Delangue",role:"CEO & Co-founder",i:"CD",bg:"#1e1a0e",fg:"#fb923c"},
+      {name:"Julien Chaumond",role:"CTO & Co-founder",i:"JC",bg:"#141828",fg:"#6699ff"},
+      {name:"Thomas Wolf",role:"CSO & Co-founder",i:"TW",bg:"#141e1a",fg:"#4fd1a8"},
+    ],
+    founders:["Clément Delangue","Julien Chaumond","Thomas Wolf"],
+    investors:["Salesforce","NVIDIA","AMD","Intel","IBM","Google","Amazon","Lux Capital","Sequoia"],
+    valuation:"$4.5B",funding:"$395M+",
+    products:["Transformers Library","Hub","Inference API","Spaces","Datasets","PEFT"],
+    departments:[
+      {name:"Research",head:"Thomas Wolf"},{name:"Platform",head:"—"},
+      {name:"Enterprise",head:"—"},{name:"Community",head:"—"},
+    ]
+  },
+  {
+    id:"nvidia",abbr:"NV",bg:"#0e1a0e",fg:"#4ade80",
+    name:"NVIDIA AI",origin:"Santa Clara, USA",year:1993,
+    focus:"AI Hardware & Software",tags:["Hardware","Infrastructure","LLM"],
+    desc:"The backbone of AI compute. Makes GPUs and the CUDA stack that powers almost all AI training globally.",
+    ceo:{name:"Jensen Huang"},cto:{name:"Bill Dally (Chief Scientist)"},
+    people:[
+      {name:"Jensen Huang",role:"CEO & Co-founder",i:"JH",bg:"#0e1a0e",fg:"#4ade80"},
+      {name:"Bill Dally",role:"Chief Scientist & SVP",i:"BD",bg:"#141828",fg:"#6699ff"},
+      {name:"Colette Kress",role:"CFO",i:"CK",bg:"#1e1e1a",fg:"#ffc97c"},
+      {name:"Ajay Puri",role:"EVP Worldwide Field Ops",i:"AP",bg:"#1a1428",fg:"#c084fc"},
+      {name:"Manuvir Das",role:"VP Enterprise Computing",i:"MD",bg:"#1e1a14",fg:"#ffb347"},
+      {name:"Kimberly Powell",role:"VP Healthcare",i:"KP",bg:"#1e1428",fg:"#f472b6"},
+    ],
+    founders:["Jensen Huang","Chris Malachowsky","Curtis Priem"],
+    investors:["Public (NVDA on NASDAQ)"],
+    valuation:"$3T+",funding:"Public company",
+    products:["H100 GPU","B200 GPU","CUDA","NeMo","Triton","DGX Cloud","RAPIDS"],
+    departments:[
+      {name:"GPU Architecture",head:"Bill Dally"},{name:"AI Software",head:"—"},
+      {name:"DGX Cloud",head:"Manuvir Das"},{name:"Automotive",head:"—"},
+      {name:"Healthcare",head:"Kimberly Powell"},{name:"Robotics",head:"—"},
+    ]
+  },
+];
+
+const allTags = [...new Set(companies.flatMap(c=>c.tags))].sort();
+let activeTag = null;
+
+function initTags(){
+  const el = document.getElementById('tags');
+  el.innerHTML = '<span class="tag active" onclick="setTag(null,this)">All</span>'
+    + allTags.map(t=>`<span class="tag" onclick="setTag('${t}',this)">${t}</span>`).join('');
+}
+
+function setTag(tag, el){
+  activeTag = tag;
+  document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render(){
+  const q = document.getElementById('search').value.toLowerCase();
+  const sort = document.getElementById('sort').value;
+  let list = companies.filter(c=>{
+    if(activeTag && !c.tags.includes(activeTag)) return false;
+    if(!q) return true;
+    const hay = [c.name,c.origin,c.desc,...c.founders,...c.investors,...c.people.map(p=>p.name)].join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  list = [...list].sort((a,b)=>{
+    if(sort==='year') return a.year - b.year;
+    if(sort==='focus') return a.focus.localeCompare(b.focus);
+    return a.name.localeCompare(b.name);
+  });
+  document.getElementById('count').textContent = `// ${list.length} compan${list.length===1?'y':'ies'} found`;
+  const grid = document.getElementById('grid');
+  if(!list.length){
+    grid.innerHTML = '<div class="no-results">No companies match your search. Try a different keyword.</div>';
+    return;
+  }
+  grid.innerHTML = list.map(c=>`
+    <div class="card" onclick="openModal('${c.id}')">
+      <div class="card-top">
+        <div class="logo" style="background:${c.bg};color:${c.fg}">${c.abbr}</div>
+        <div>
+          <div class="card-name">${c.name}</div>
+          <div class="card-origin">${c.origin}</div>
+          <div class="card-year">est. ${c.year}</div>
+        </div>
+      </div>
+      <div class="card-desc">${c.desc}</div>
+      <div class="card-badges">
+        ${c.tags.map(t=>`<span class="badge">${t}</span>`).join('')}
+        <span class="badge focus-badge">${c.focus}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(id){
+  const c = companies.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-header">
+      <div class="modal-logo" style="background:${c.bg};color:${c.fg}">${c.abbr}</div>
+      <div>
+        <div class="modal-name">${c.name}</div>
+        <div class="modal-meta">${c.origin} &nbsp;·&nbsp; Est. ${c.year} &nbsp;·&nbsp; ${c.focus}</div>
+      </div>
+      <button class="close-btn" onclick="closeModal()">✕ Close</button>
+    </div>
+    <div class="section">
+      <div class="section-title">Overview</div>
+      <div class="info-row">
+        <div class="info-item"><span class="info-label">Valuation</span><span class="info-val">${c.valuation}</span></div>
+        <div class="info-item"><span class="info-label">Total funding</span><span class="info-val">${c.funding}</span></div>
+        <div class="info-item"><span class="info-label">CEO</span><span class="info-val">${c.ceo.name}</span></div>
+        <div class="info-item"><span class="info-label">CTO / Tech Lead</span><span class="info-val">${c.cto.name||'—'}</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Founders</div>
+      <div class="pill-list">${c.founders.map(f=>`<span class="pill">${f}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Key people</div>
+      <div class="people-grid">${c.people.map(p=>`
+        <div class="person">
+          <div class="avatar" style="background:${p.bg};color:${p.fg}">${p.i}</div>
+          <div><div class="person-name">${p.name}</div><div class="person-role">${p.role}</div></div>
+        </div>
+      `).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Investors & backers</div>
+      <div class="pill-list">${c.investors.map(i=>`<span class="pill">${i}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Key products</div>
+      <div class="pill-list">${c.products.map(p=>`<span class="pill">${p}</span>`).join('')}</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Departments</div>
+      <div class="dept-grid">${c.departments.map(d=>`
+        <div class="dept">
+          <div class="dept-name">${d.name}</div>
+          ${d.head&&d.head!=='—'?`<div class="dept-head">${d.head}</div>`:''}
+        </div>
+      `).join('')}</div>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e){
+  if(!e || e.target===document.getElementById('overlay')){
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+});
+
+initTags();
+render();
+</script>
+</body>
+</html>
